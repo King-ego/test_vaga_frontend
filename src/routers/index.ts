@@ -6,6 +6,7 @@ const Routers = createRouter({
     routes: [
         {path: "/", component: () => import("../views/Home.vue")},
         {path: "/produto/:id", component: () => import("../views/DetailsProduct.vue")},
+        {path: "/cart", component: () => import("../views/Cart.vue")},
         {path: '/:pathMatch(.*)*', redirect: "/"}
     ],
     linkActiveClass: 'active',

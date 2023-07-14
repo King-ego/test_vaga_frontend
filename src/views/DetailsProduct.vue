@@ -25,6 +25,7 @@
       </div>
 
       <button @click="setProductInCart">Adicionar ao carrinho</button>
+      <button @click="redirectCart">Ir ao carrinho</button>
     </div>
   </div>
 </template>
@@ -59,7 +60,7 @@ export default defineComponent({
     },
     async setProductInCart() {
       try {
-        const cart = await api.post("carts", {
+        await api.post("carts", {
           userId: localStorage.getItem("id"),
           date: moment(moment()).format("YYYY-MM-DD"),
           products: [{productId: this.product.id, quantity: this.number_product}]
@@ -67,6 +68,13 @@ export default defineComponent({
       } catch (err) {
         console.log(err)
       }
+    },
+    redirectCart(){
+      const token = localStorage.getItem("token-api")
+      if(token) {
+        this.$router.push("/cart")
+      }
+
     }
   },
   mounted() {
