@@ -20,7 +20,7 @@
         <div>
           <label>Quantidade: </label>
           <select v-model="number_product">
-            <option selected :value="1">1</option>
+            <option :value="1">1</option>
             <option :value="2">2</option>
             <option :value="3">3</option>
             <option :value="4">4</option>
@@ -41,6 +41,7 @@ import Product from "../interfaces/Product";
 import formatCoinBRL from "../utils/formatCoinBRL";
 import moment from "moment";
 import Header from "../components/Header.vue";
+import Cart from "../interfaces/Cart";
 
 export default defineComponent({
   name: "Details",
@@ -48,7 +49,8 @@ export default defineComponent({
   data() {
     return {
       product: {} as Product,
-      number_product: 1
+      number_product: 1,
+      cart: {} as Cart,
     }
   },
   methods: {
@@ -64,13 +66,36 @@ export default defineComponent({
     formatCoinTOBRL(coin: number) {
       return formatCoinBRL(coin);
     },
-    async setProductInCart() {
+    async existCart(){
       try {
-        await api.post("carts", {
-          userId: localStorage.getItem("id"),
-          date: moment(moment()).format("YYYY-MM-DD"),
-          products: [{productId: this.product.id, quantity: this.number_product}]
-        })
+        const id = localStorage.getItem("id");
+        const cart = await api.get(`carts/user/${id}`);
+         this.cart = cart?.data[0]
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async setProductInCart() {
+      await this.existCart();
+      try {
+        if(!this.cart?.products?.length) {
+          console.log("1")
+          await api.post("carts", {
+            userId: localStorage.getItem("id"),
+            date: moment(moment()).format("YYYY-MM-DD"),
+            products: [{productId: this.product.id, quantity: this.number_product}]
+          })
+        } else {
+
+          const products = this.cart.products.filter((product=> product.productId !== this.product.id))
+          const new_cart = await api.put(`carts/${this.cart.id}`, {
+            userId: Number(localStorage.getItem("id")),
+            date: moment(moment()).format("YYYY-MM-DD"),
+            products: [...products, {productId: this.product.id, quantity: this.number_product}]
+          })
+          console.log(new_cart, "2", [...products, {productId: this.product.id, quantity: this.number_product}])
+        }
+
       } catch (err) {
         console.log(err)
       }

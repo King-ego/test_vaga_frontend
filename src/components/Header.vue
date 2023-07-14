@@ -17,7 +17,7 @@
         <input class="header__dropbox__input" v-model="payload.search" placeholder="pesquisar"/>
         <button @click="search" class="header__dropbox__button">pesquisar</button>
       </div>
-      <div class="amount__cart">
+      <div class="amount__cart" @click="redirectCart">
         <span v-if="amountItemCart" class="amount__cart__item">{{ amountItemCart }}</span>
         <button class="amount__cart__img">
           <img class="imagen-container" src="/src/assets/icons/cart.png" alt="imagem de um carrinho de loja"/>
@@ -102,7 +102,14 @@ export default defineComponent({
       } catch (e) {
         console.log(e)
       }
-    }
+    },
+    redirectCart() {
+      const token = localStorage.getItem("token-api")
+      if (token) {
+        this.$router.push("/cart")
+      }
+
+    },
   },
   mounted() {
     this.getAllCategory();

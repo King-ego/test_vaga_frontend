@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div v-if="loading && !products.length">ncmxc</div>
-    <div v-if="!loading && !products.length">Nenhum Produto Encontrado</div>
+    <div v-if="loading && !products.length">Buscando ...</div>
+    <div v-if="!loading && !cart.length && !products.length">Nenhum Produto Encontrado</div>
+    <div v-if="!loading && cart.length && !products.length">Carregando ...</div>
     <div v-if="!loading && products.length">
       <div v-for="(product, idx) in products" v-bind:key="product.id">
         <div class="card__img">
@@ -9,7 +10,13 @@
         </div>
         <div>
           <p>{{product.title}}</p>
-          <p>Quantidade: {{product.quantity}}</p>
+          <select v-model="product.quantity">
+            <option :value="1">1</option>
+            <option :value="2">2</option>
+            <option :value="3">3</option>
+            <option :value="4">4</option>
+          </select>
+<!--          <p>Quantidade: {{product.quantity}}</p>-->
         </div>
         <button @click="removeProduct(idx)">Remove</button>
       </div>
@@ -33,6 +40,7 @@ export default defineComponent({
     return {
       products: [] as Products[],
       loading: false,
+      cart: [],
     }
   },
   methods: {
@@ -41,7 +49,7 @@ export default defineComponent({
       try {
         const id = localStorage.getItem("id");
         const cart = await api.get(`carts/user/${id}`);
-        console.log({cart: cart.data[0].products})
+        this.cart = cart.data;
         /*const products:Products[] = [];*/
         cart.data[0].products.map(async (product) => {
           const prt = await api.get(`products/${product.productId}`);
