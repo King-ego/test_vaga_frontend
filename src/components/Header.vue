@@ -50,7 +50,7 @@ export default defineComponent({
     async getAllCategory() {
       try {
         const categories = await api.get("products/categories");
-        console.log(categories.data);
+        console.log({data:categories.data, route: this.$route, router: this.$router});
         this.categories = categories.data;
       } catch (err) {
         console.log(err);

@@ -1,31 +1,35 @@
 <template>
-  <div class="product__page">
-    <div class="product__boximage">
-      <img :src="product?.image" alt="image do produto"/>
-    </div>
-    <div class="product__info">
-      <p class="product__info__title">{{ product?.title }}</p>
-      <p class="product__info__title">{{ formatCoinTOBRL(product?.price) }}</p>
-      <p class="product__info__title">{{ product?.rating?.rate }}</p>
-      <p class="product__info__title">{{ product?.rating?.count }}</p>
-      <p class="product__info__title">{{ product?.description }}</p>
-      <p class="product__info__title">{{ product?.category }}</p>
-    </div>
-    <div
-        style="background: white; width: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
-      <p>{{ formatCoinTOBRL(product?.price) }}</p>
-      <div>
-        <label>Quantidade: </label>
-        <select v-model="number_product">
-          <option selected :value="1">1</option>
-          <option :value="2">2</option>
-          <option :value="3">3</option>
-          <option :value="4">4</option>
-        </select>
+  <div>
+    <Header/>
+    <p @click="backHome" class="details__title">Voltar</p>
+    <div class="product__page">
+      <div class="product__boximage">
+        <img :src="product?.image" alt="image do produto"/>
       </div>
+      <div class="product__info">
+        <p class="product__info__title">{{ product?.title }}</p>
+        <p class="product__info__title">{{ formatCoinTOBRL(product?.price) }}</p>
+        <p class="product__info__title">{{ product?.rating?.rate }}</p>
+        <p class="product__info__title">{{ product?.rating?.count }}</p>
+        <p class="product__info__title">{{ product?.description }}</p>
+        <p class="product__info__title">{{ product?.category }}</p>
+      </div>
+      <div
+          style="background: white; width: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+        <p>{{ formatCoinTOBRL(product?.price) }}</p>
+        <div>
+          <label>Quantidade: </label>
+          <select v-model="number_product">
+            <option selected :value="1">1</option>
+            <option :value="2">2</option>
+            <option :value="3">3</option>
+            <option :value="4">4</option>
+          </select>
+        </div>
 
-      <button @click="setProductInCart">Adicionar ao carrinho</button>
-      <button @click="redirectCart">Ir ao carrinho</button>
+        <button @click="setProductInCart">Adicionar ao carrinho</button>
+        <button @click="redirectCart">Ir ao carrinho</button>
+      </div>
     </div>
   </div>
 </template>
@@ -36,9 +40,11 @@ import api from "../services/api";
 import Product from "../interfaces/Product";
 import formatCoinBRL from "../utils/formatCoinBRL";
 import moment from "moment";
+import Header from "../components/Header.vue";
 
 export default defineComponent({
   name: "Details",
+  components: {Header},
   data() {
     return {
       product: {} as Product,
@@ -69,12 +75,15 @@ export default defineComponent({
         console.log(err)
       }
     },
-    redirectCart(){
+    redirectCart() {
       const token = localStorage.getItem("token-api")
-      if(token) {
+      if (token) {
         this.$router.push("/cart")
       }
 
+    },
+    backHome(){
+      this.$router.push("/");
     }
   },
   mounted() {
@@ -88,6 +97,10 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+}
+
+.details__title {
+  cursor: pointer;
 }
 
 .product__boximage {

@@ -1,6 +1,9 @@
 <template>
   <div>
     <Header @search="filter"/>
+<!--    <div>
+      <p class="home__title">Produtos</p>
+    </div>-->
     <div class="box__card">
       <div v-for="product in products" :ref="product.id" class="card__product" @click="redirectToDetail(product.id)">
         <div class="card__product__box__img">
@@ -68,6 +71,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/*.home__title {
+  font-family: "Montserrat";
+  font-weight: 700;
+  font-size: 28px;
+  margin: 40px 0;
+}*/
+
 .box__card {
   display: flex;
   flex-wrap: wrap;
