@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <div>
-        <p class="header__title">Adoorei Shop</p>
+        <p @click="redirectHome" class="header__title">Adoorei Shop</p>
       </div>
       <div style="position: relative;">
         <button class="header__dropbox__button" @click="toggleDropBox">{{
@@ -17,17 +17,19 @@
         <input class="header__dropbox__input" v-model="payload.search" placeholder="pesquisar"/>
         <button @click="search" class="header__dropbox__button">pesquisar</button>
       </div>
-      <div class="amount__cart" @click="redirectCart">
-        <span v-if="amountItemCart" class="amount__cart__item">{{ amountItemCart }}</span>
-        <button class="amount__cart__img">
-          <img class="imagen-container" src="/src/assets/icons/cart.png" alt="imagem de um carrinho de loja"/>
+      <div style="display: flex; gap: 10px">
+        <div class="amount__cart" @click="redirectCart">
+          <span v-if="amountItemCart" class="amount__cart__item">{{ amountItemCart }}</span>
+          <button class="amount__cart__img">
+            <img class="imagen-container" src="/src/assets/icons/cart.png" alt="imagem de um carrinho de loja"/>
+          </button>
+        </div>
+        <button class="header__dropbox__button" @click="submit" :title="existToken ? 'Sair' : 'Entrar'">
+          <img class="imagen-container" alt="icone"
+               :src="existToken ? '/src/assets/icons/logout.png': '/src/assets/icons/login.png'"/>
         </button>
-
       </div>
-      <button class="header__dropbox__button" @click="submit" :title="existToken ? 'Sair' : 'Entrar'">
-        <img class="imagen-container" alt="icone"
-             :src="existToken ? '/src/assets/icons/logout.png': '/src/assets/icons/login.png'"/>
-      </button>
+
     </div>
   </div>
 </template>
@@ -60,7 +62,7 @@ export default defineComponent({
   methods: {
     async submit() {
       try {
-        if(!this.existToken){
+        if (!this.existToken) {
           const users = await api.get("users");
           const user = users.data.filter((usr: User) => usr.password === "83r5^_" && usr.username === "mor_2314");
           const token = await api.post("auth/login", {username: "mor_2314", password: "83r5^_"})
@@ -111,6 +113,9 @@ export default defineComponent({
       }
 
     },
+    redirectHome() {
+      this.$router.push("/")
+    },
   },
   mounted() {
     this.getAllCategory();
@@ -126,12 +131,14 @@ export default defineComponent({
   display: flex;
   align-items: center;
   padding: 10px;
+  justify-content: space-between;
 }
 
 .header__title {
   color: var(--white);
   font-family: "Montserrat";
   font-weight: 700;
+  cursor: pointer;
 }
 
 .header__dropbox {
@@ -163,6 +170,8 @@ export default defineComponent({
 
 .amount__cart {
   position: relative;
+  display: flex;
+  gap: 20px;
 }
 
 .amount__cart__img {
