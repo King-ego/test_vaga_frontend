@@ -2,7 +2,8 @@
   <div>
     <Header @search="filter"/>
     <Banner/>
-    <div class="box__card">
+    <p v-if="type_category" class="title__category">Categoria {{type_category}}</p>
+    <div class="box__card flex">
       <div v-for="product in OrdemProductsBy" :ref="product.id" class="card__product" @click="redirectToDetail(product.id)">
         <div class="card__product__box__img">
           <img :src="product.image" alt="imagen do produto" class="imagen-container"/>
@@ -37,6 +38,7 @@ export default defineComponent({
     return {
       products: [] as Product[],
       type_ordem: "",
+      type_category: "",
     }
   },
   methods: {
@@ -45,6 +47,7 @@ export default defineComponent({
       try {
         const products = await api.get(url);
         this.type_ordem = info?.type_search || "Nome";
+        this.type_category = info?.category || "";
         if (!info?.search) {
           this.products = products.data;
         } else {
@@ -132,5 +135,13 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.title__category {
+  font-family: "Montserrat";
+  font-weight: 700;
+  margin-bottom: 20px;
+  margin-left: 10px;
+  text-transform: uppercase;
 }
 </style>
