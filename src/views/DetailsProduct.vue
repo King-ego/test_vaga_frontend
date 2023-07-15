@@ -79,23 +79,19 @@ export default defineComponent({
       await this.existCart();
       try {
         if(!this.cart?.products?.length) {
-          console.log("1")
           await api.post("carts", {
             userId: localStorage.getItem("id"),
             date: moment(moment()).format("YYYY-MM-DD"),
             products: [{productId: this.product.id, quantity: this.number_product}]
           })
         } else {
-
           const products = this.cart.products.filter((product=> product.productId !== this.product.id))
-          const new_cart = await api.put(`carts/${this.cart.id}`, {
+          await api.put(`carts/${this.cart.id}`, {
             userId: Number(localStorage.getItem("id")),
             date: moment(moment()).format("YYYY-MM-DD"),
             products: [...products, {productId: this.product.id, quantity: this.number_product}]
           })
-          console.log(new_cart, "2", [...products, {productId: this.product.id, quantity: this.number_product}])
         }
-
       } catch (err) {
         console.log(err)
       }

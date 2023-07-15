@@ -89,6 +89,7 @@ export default defineComponent({
     },
     setCategory(category) {
       this.payload.category = category;
+      this.search();
       this.toggleDropBox();
     },
     search() {
@@ -120,7 +121,7 @@ export default defineComponent({
 
 <style scoped>
 .header {
-  background: var(--white-black);
+  background: var(--blue-black);
   min-height: 60px;
   display: flex;
   align-items: center;

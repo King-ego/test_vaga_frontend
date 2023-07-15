@@ -1,6 +1,7 @@
 <template>
   <div>
     <Header @search="filter"/>
+    <Banner />
     <div class="box__card">
       <div v-for="product in products" :ref="product.id" class="card__product" @click="redirectToDetail(product.id)">
         <div class="card__product__box__img">
@@ -21,6 +22,7 @@ import api from "../services/api";
 import Product from "../interfaces/Product";
 import formatCoinBRL from "../utils/formatCoinBRL";
 import Header from "../components/Header.vue";
+import Banner from "../components/Banner.vue";
 
 interface Search {
   category: string,
@@ -29,7 +31,7 @@ interface Search {
 
 export default defineComponent({
   name: "Home",
-  components: {Header},
+  components: {Banner, Header},
   data() {
     return {
       products: [] as Product[],
@@ -57,7 +59,6 @@ export default defineComponent({
       this.$router.push(`produto/${id}`)
     },
     filter(e: Search) {
-      console.log(e)
       this.listProducts(e)
     }
   },
