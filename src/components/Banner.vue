@@ -20,9 +20,8 @@ export default defineComponent({
 .banner {
   background: var(--green-sea-light);
   height: 200px;
-  width: 100%;
   border-radius: 20px;
-  margin: 20px 0;
+  margin: 20px 10px;
   position: relative;
   display: flex;
   align-items: flex-end;

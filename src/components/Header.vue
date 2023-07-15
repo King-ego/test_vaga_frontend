@@ -4,29 +4,41 @@
       <div>
         <p @click="redirectHome" class="header__title">Adoorei Shop</p>
       </div>
-      <div style="position: relative;">
-        <button class="header__dropbox__button" @click="toggleDropBox">{{
+      <div class="relative flex">
+        <button class="header__dropbox__button btn btn__dropdown flex-center" @click="toggleDropBox">{{
             payload.category ? payload.category : "Todos"
-          }} v
+          }}
+          <img class="imagen-container" style="width: 15px" src="/src/assets/icons/expand_more.png" alt="chevron-bottom">
+        </button>
+        <button class="header__dropbox__button btn btn__dropdown flex-center" style="border-radius: 0" @click="toggleDropBoxTypeOrdem">{{ payload.type_search }}
+          <img class="imagen-container" style="width: 15px" src="/src/assets/icons/expand_more.png" alt="chevrom-bottom">
         </button>
         <div class="header__dropbox" v-if="dropdown">
           <p @click="setCategory('')" class="header__dropbox__item">Todos</p>
           <p @click="setCategory(category)" class="header__dropbox__item" v-for="(category, idx) in categories"
              v-bind:key="idx">{{ category }}</p>
         </div>
+        <div class="header__dropbox" v-if="dropdown__type">
+          <p @click="setTypeSearch('Nome')" class="header__dropbox__item">Nome</p>
+          <p @click="setTypeSearch('Preço')" class="header__dropbox__item">Preço</p>
+          <p @click="setTypeSearch('Avaliação')" class="header__dropbox__item">Avaliação</p>
+        </div>
         <input class="header__dropbox__input" v-model="payload.search" placeholder="pesquisar"/>
-        <button @click="search" class="header__dropbox__button">pesquisar</button>
+        <button @click="search" class="header__dropbox__button btn btn__searc">
+          <img class="imagen-container" src="/src/assets/icons/search.png" alt="lupa"/>
+        </button>
       </div>
-      <div style="display: flex; gap: 10px">
+      <div class="box__button__left">
         <div class="amount__cart" @click="redirectCart">
           <span v-if="amountItemCart" class="amount__cart__item">{{ amountItemCart }}</span>
-          <button class="amount__cart__img">
-            <img class="imagen-container" src="/src/assets/icons/cart.png" alt="imagem de um carrinho de loja"/>
+          <button class="amount__cart__img btn bg-transparent">
+            <img class="imagen-container" src="/src/assets/icons/cart.svg" alt="imagem de um carrinho de loja"/>
           </button>
         </div>
-        <button class="header__dropbox__button" @click="submit" :title="existToken ? 'Sair' : 'Entrar'">
+        <button class="header__dropbox__button btn bg-transparent" @click="submit"
+                :title="existToken ? 'Sair' : 'Entrar'">
           <img class="imagen-container" alt="icone"
-               :src="existToken ? '/src/assets/icons/logout.png': '/src/assets/icons/login.png'"/>
+               :src="existToken ? '/src/assets/icons/logout.svg': '/src/assets/icons/login.svg'"/>
         </button>
       </div>
 
@@ -45,11 +57,13 @@ export default defineComponent({
     return {
       categories: [] as string[],
       dropdown: false,
+      dropdown__type: false,
       amountItemCart: 0,
       istoken: false,
       payload: {
         category: "",
         search: "",
+        type_search: "Nome"
       }
     }
   },
@@ -88,11 +102,21 @@ export default defineComponent({
     },
     toggleDropBox() {
       this.dropdown = !this.dropdown;
+      this.dropdown__type = false;
+    },
+    toggleDropBoxTypeOrdem() {
+      this.dropdown__type = !this.dropdown__type;
+      this.dropdown = false;
     },
     setCategory(category) {
       this.payload.category = category;
       this.search();
       this.toggleDropBox();
+    },
+    setTypeSearch(type_search: string) {
+      this.payload.type_search = type_search;
+      this.search();
+      this.toggleDropBoxTypeOrdem();
     },
     search() {
       this.$emit('search', this.payload);
@@ -144,10 +168,12 @@ export default defineComponent({
 .header__dropbox {
   width: 150px;
   background: white;
-  height: 200px;
+  height: 150px;
   overflow-y: auto;
   position: absolute;
-  border-radius: 0 0 2px 2px
+  border-radius: 0 0 10px 10px;
+  z-index: 99;
+  top: 30px;
 }
 
 .header__dropbox__button {
@@ -156,12 +182,16 @@ export default defineComponent({
 
 .header__dropbox__input {
   height: 30px;
+  padding: 5px;
+  border: 1px solid var(--white);
+  border-left: 2px solid var(--gray-three);
 }
 
 .header__dropbox__item {
   width: 100%;
   cursor: pointer;
   padding: 5px;
+  border-bottom: 1px solid var(--gray-three);
 }
 
 .header__dropbox__item:hover {
@@ -193,5 +223,18 @@ export default defineComponent({
   color: var(--white);
   right: -14px;
   top: -10px;
+}
+
+.box__button__left {
+  display: flex;
+  gap: 10px;
+}
+
+.btn__dropdown {
+  border-radius: 5px 0 0 5px;
+}
+
+.btn__searc {
+  border-radius: 0 5px 5px 0;
 }
 </style>

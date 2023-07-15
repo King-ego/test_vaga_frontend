@@ -1,15 +1,39 @@
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Roboto", sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
 }
 
 body {
-  background: var(--gray-one);
+    background: var(--gray-one);
 }
 
 button {
-  cursor: pointer;
+    cursor: pointer;
 }
 
+.relative {
+    position: relative;
+}
+
+.btn {
+    background: var(--white);
+    border: none;
+    border-radius: 5px;
+    padding: 2px;
+}
+
+.bg-transparent {
+    background: transparent !important;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
