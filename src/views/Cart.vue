@@ -4,33 +4,36 @@
     <div>
       <div v-if="loading && !products.length" class="card flex-center flex-col content">Buscando ...</div>
       <div v-if="!loading  && !products.length" class="card flex-center flex-col content">
-        <p>{{ amount ? "Carregando..." :  "Carrinho Vazio" }}</p>
+        <p>{{ amount ? "Carregando..." : "Carrinho Vazio" }}</p>
         <p v-if="!existToken">Você não está logado</p>
       </div>
-<!--      <div v-if="!loading && !products.length" class="card flex-center flex-col content">Carregando ...
-      </div>-->
       <div v-if="!loading && products.length">
-        <div class="card__close__buy flex justify-between">
-          <p class="card__title">Preço Total: {{ formatCoinTOBRL(allPrice) }}</p>
-          <button> Fechar a compra</button>
+        <div v-if="!step">
+          <div class="card__close__buy flex justify-between">
+            <p class="card__title">Preço Total: {{ formatCoinTOBRL(allPrice) }}</p>
+            <button class="btn card__close__buy__button" @click="nextStep"> Finalizar pedido</button>
+          </div>
+          <div class="card flex flex-col gap-10px" v-for="(product, idx) in products" v-bind:key="product.id">
+            <div class="card__img">
+              <img :src="product?.image" alt="product"/>
+            </div>
+            <div class="flex-col flex gap-10px">
+              <p>{{ product.title }}</p>
+              <p>{{ formatCoinTOBRL(product.price) }}</p>
+              <select @change="updateProduct(idx)" v-model="product.quantity">
+                <option :value="1">1</option>
+                <option :value="2">2</option>
+                <option :value="3">3</option>
+                <option :value="4">4</option>
+              </select>
+            </div>
+            <div class="flex gap-10px">
+              <button @click="removeProduct(idx)" class="btn btn-cart">Remove</button>
+            </div>
+          </div>
         </div>
-        <div class="card flex flex-col gap-10px" v-for="(product, idx) in products" v-bind:key="product.id">
-          <div class="card__img">
-            <img :src="product?.image" alt="product"/>
-          </div>
-          <div class="flex-col flex gap-10px">
-            <p>{{ product.title }}</p>
-            <p>{{ formatCoinTOBRL(product.price) }}</p>
-            <select @change="updateProduct(idx)" v-model="product.quantity">
-              <option :value="1">1</option>
-              <option :value="2">2</option>
-              <option :value="3">3</option>
-              <option :value="4">4</option>
-            </select>
-          </div>
-          <div class="flex gap-10px">
-            <button @click="removeProduct(idx)" class="btn btn-cart">Remove</button>
-          </div>
+        <div v-if="step" class="card flex-center flex-col content">
+          Pedido Realizado Com Sucesso
         </div>
       </div>
 
@@ -60,6 +63,7 @@ export default defineComponent({
       loading: false,
       cart: {} as Cart,
       amount: 0,
+      step: 0,
     }
   },
   methods: {
@@ -83,8 +87,8 @@ export default defineComponent({
       const quantity = this.products[position].quantity
       const id = this.products[position].id
 
-      const cart = this.cart.products.filter((cart)=>cart.productId !== id)
-      this.cart.products = [...cart, {productId: id, quantity }]
+      const cart = this.cart.products.filter((cart) => cart.productId !== id)
+      this.cart.products = [...cart, {productId: id, quantity}]
 
       try {
         const adt = await api.put(`carts/${this.cart.id}`, this.cart)
@@ -97,25 +101,27 @@ export default defineComponent({
     async removeProduct(position: number) {
       const id = this.products[position].id
 
-      const cart = this.cart.products.filter((cart)=>cart.productId !== id)
+      const cart = this.cart.products.filter((cart) => cart.productId !== id)
       this.products.splice(position, 1)
       this.amount = this.amount - 1;
       try {
-        if(this.amount){
+        if (this.amount) {
           const adt = await api.put(`carts/${this.cart.id}`, {...this.cart, products: cart})
           console.log({adt})
-        }else {
+        } else {
           const adt = await api.delete(`carts/${this.cart.id}`)
-          console.log({adt, text: "delete", cart: this.cart, products:this.products})
+          console.log({adt, text: "delete", cart: this.cart, products: this.products})
         }
 
-      }
-      catch (e) {
+      } catch (e) {
         console.log(e)
       }
     },
     formatCoinTOBRL(coin: number) {
       return formatCoinBRL(coin);
+    },
+    nextStep(){
+      this.step = this.step + 1;
     },
   },
   computed: {
@@ -177,5 +183,11 @@ select {
   height: 100px;
   display: flex;
   align-items: center;
+}
+
+.card__close__buy__button {
+  background: var(--green-sea-light);
+  padding: 10px;
+  color: var(--white);
 }
 </style>
