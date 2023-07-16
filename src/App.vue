@@ -1,12 +1,8 @@
 <template>
-  <div>
+  <Container>
     <router-view/>
-  </div>
+  </Container>
 </template>
-<style>
-.imagen-container {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-</style>
+<script setup lang="ts">
+import Container from "./components/Container.vue";
+</script>
