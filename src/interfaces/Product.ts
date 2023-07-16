@@ -8,5 +8,5 @@ export default interface Product {
     rating: {
         rate: number;
         count: number;
-    }
+    };
 }

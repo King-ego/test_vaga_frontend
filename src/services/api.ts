@@ -5,6 +5,6 @@ const api = axios.create({
     headers: {
         Authorization: `Baren ${localStorage.getItem("token")}`
     },
-})
+});
 
 export default api;

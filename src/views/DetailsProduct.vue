@@ -26,9 +26,9 @@
             <option :value="4">4</option>
           </select>
         </div>
-
-        <button @click="setProductInCart">Adicionar ao carrinho</button>
-        <button @click="redirectCart">Ir ao carrinho</button>
+        <div v-if="addToCard">Adicionado Com Sucesso</div>
+        <button class="btn btn-cart" v-if="!addToCard" @click="setProductInCart">Adicionar ao carrinho</button>
+        <button class="btn btn-cart" @click="redirectCart">Ir ao carrinho</button>
       </div>
     </div>
   </div>
@@ -51,6 +51,7 @@ export default defineComponent({
       product: {} as Product,
       number_product: 1,
       cart: {} as Cart,
+      addToCard: false,
     }
   },
   methods: {
@@ -92,16 +93,13 @@ export default defineComponent({
             products: [...products, {productId: this.product.id, quantity: this.number_product}]
           })
         }
+        this.addToCard = true;
       } catch (err) {
         console.log(err)
       }
     },
     redirectCart() {
-      const token = localStorage.getItem("token-api")
-      if (token) {
         this.$router.push("/cart")
-      }
-
     },
     backHome(){
       this.$router.push("/");
@@ -122,6 +120,7 @@ export default defineComponent({
 
 .details__title {
   cursor: pointer;
+  margin: 20px 0;
 }
 
 .product__boximage {
@@ -151,5 +150,15 @@ export default defineComponent({
 
 .product__info__title:nth-child(2n+1) {
   background: #eaeaea;
+}
+
+.btn-cart {
+  background: var(--gray-two);
+  padding: 10px;
+}
+
+select {
+  border: 1px solid var(--gray-three);
+  width: 40px;
 }
 </style>

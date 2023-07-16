@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="header">
+    <div class="header flex flex-wrap gap-10px">
       <div>
         <p @click="redirectHome" class="header__title">Adoorei Shop</p>
       </div>
-      <div class="relative flex">
+      <div v-if="existFilter" class="relative flex">
         <button class="header__dropbox__button btn btn__dropdown flex-center" @click="toggleDropBox">{{
             payload.category ? payload.category : "Todos"
           }}
@@ -71,6 +71,9 @@ export default defineComponent({
     existToken() {
       const token = localStorage.getItem("token-api");
       return !!token;
+    },
+    existFilter(){
+      return this.$route.name === "Home";
     }
   },
   methods: {
@@ -94,7 +97,6 @@ export default defineComponent({
     async getAllCategory() {
       try {
         const categories = await api.get("products/categories");
-        console.log({data: categories.data, route: this.$route, router: this.$router});
         this.categories = categories.data;
       } catch (err) {
         console.log(err);
@@ -131,10 +133,7 @@ export default defineComponent({
       }
     },
     redirectCart() {
-      const token = localStorage.getItem("token-api")
-      if (token) {
         this.$router.push("/cart")
-      }
 
     },
     redirectHome() {
@@ -187,6 +186,10 @@ export default defineComponent({
   border-left: 2px solid var(--gray-three);
 }
 
+.header__dropbox__input:focus {
+  outline: none;
+}
+
 .header__dropbox__item {
   width: 100%;
   cursor: pointer;
@@ -227,14 +230,17 @@ export default defineComponent({
 
 .box__button__left {
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
 }
 
 .btn__dropdown {
   border-radius: 5px 0 0 5px;
+  padding: 10px;
 }
 
 .btn__searc {
   border-radius: 0 5px 5px 0;
+  padding: 6px;
 }
 </style>

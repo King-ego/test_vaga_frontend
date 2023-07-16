@@ -41,3 +41,15 @@ button {
 .flex-col {
     flex-direction: column;
 }
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.gap-10px {
+    gap: 10px;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
